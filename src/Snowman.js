@@ -8,6 +8,7 @@ import img3 from "./3.png";
 import img4 from "./4.png";
 import img5 from "./5.png";
 import img6 from "./6.png";
+import { randomWord, ENGLISH_WORDS } from "./words";
 
 
 /** Snowman game: plays hangman-style game with a melting snowman.
@@ -28,7 +29,7 @@ function Snowman(props) {
 
   const [nWrong, setNWrong] = useState(0);
   const [guessedLetters, setGuessedLetters] = useState(new Set());
-  const [answer, setAnswer] = useState((props.words)[0]);
+  const [answer, setAnswer] = useState(randomWord(props.words));
 
   /** guessedWord: show current-state of word:
    if guessed letters are {a,p,e}, show "app_e" for "apple"
@@ -69,13 +70,20 @@ function Snowman(props) {
     ));
   }
 
+  function restart() {
+    setNWrong(0);
+    setGuessedLetters(new Set());
+    setAnswer(randomWord(props.words));
+  }
+
   /** render: render game */
   return (
       <div className="Snowman">
         <img src={(props.images)[nWrong]} alt={nWrong} />
         <p>Number wrong: {nWrong}</p>
         <p className="Snowman-word">{guessedWord()}</p>
-        {(nWrong === props.maxWrong) ? <p>You Lose</p> : <p>{generateButtons()}</p>}
+        {(nWrong === props.maxWrong) ? <p>You Lose: {answer}</p> : <p>{generateButtons()}</p>}
+        <button onClick={restart}>Restart</button>
       </div>
   );
 }
@@ -83,7 +91,7 @@ function Snowman(props) {
 Snowman.defaultProps = {
   maxWrong: 6,
   images: [img0, img1, img2, img3, img4, img5, img6],
-  words: ["apple"],
+  words: ENGLISH_WORDS,
 };
 
 
